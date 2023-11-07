@@ -34,6 +34,7 @@ export class ObserverContainer {
   }
 
   loadObservers(observers: LoadObserversProps) {
+
     return (subject: SubjectType | string) => {
       if (typeof subject === "string") {
         const observersInSubject = observers[subject];
@@ -43,6 +44,7 @@ export class ObserverContainer {
         this.observersLoader(observersInSubject);
       }
     };
+    
   }
 
   private observersLoader(observersInSubject: () => void) {
