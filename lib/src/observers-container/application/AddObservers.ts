@@ -1,19 +1,19 @@
 import { Observer } from "../domain/interfaces/Observer";
 import { ObserverContainer } from "../domain/ObserverContainer";
-import { KeyValuePairs, SubjectType } from "../domain/types/custom-types";
+import { KeyValuePairs } from "../domain/types/custom-types";
 
 type LinkObserverToSubjectProps = Parameters<
   ObserverContainer["linkObserverToSubject"]
 >[number];
 type AddObserverProps = {
-  subjectType: string;
+  type: string;
   observers: Observer<unknown>[];
 }[];
 type LinkObserversProps = Partial<{
   [type: string]: AddObserverProps;
 }>;
 
-type AddObserversProps = { name: string; subjectDataList: AddObserverProps };
+type AddObserversProps = { name: string; subjects: AddObserverProps };
 type Observers = Parameters<ObserverContainer["loadObservers"]>[number];
 
 export class AddObservers {
@@ -22,10 +22,10 @@ export class AddObservers {
   add(paramsList: AddObserversProps[]) {
     let observers: Observers = {};
     for (const params of paramsList) {
-      const { name, subjectDataList } = params;
+      const { name, subjects } = params;
 
       const obs = this.sortSubjects({
-        [name]: subjectDataList,
+        [name]: subjects,
       });
       
       observers = { ...observers, ...obs };
@@ -42,17 +42,17 @@ export class AddObservers {
       if (!subjectDataList) return;
 
       for (const subjectData of subjectDataList) {
-        const { observers, subjectType } = subjectData;
+        const { observers, type } = subjectData;
 
         observers.forEach((observer, i) => {
           const linkObserver = this.linkObserversToSubject({
             name,
-            type: subjectType,
+            type: type,
             observer,
           });
 
-          subjectToObservers[subjectType] = {
-            ...subjectToObservers[subjectType],
+          subjectToObservers[type] = {
+            ...subjectToObservers[type],
             [i]: linkObserver,
           };
         });
