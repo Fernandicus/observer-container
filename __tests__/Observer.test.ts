@@ -1,9 +1,8 @@
 import { buildSubject } from "../__mocks__/build-subject";
 import { fakeUser } from "../__mocks__/fake-user";
-import { saveUser } from "../__mocks__/save-user";
-import { mockNotifySalesDepartment } from "../__mocks__/test-notify-sales-observers";
-import { mockSendEmails } from "../__mocks__/test-send-email-observers";
-import { userRepo } from "../__mocks__/user-repo";
+import { signUpUser, userRepo } from "../__mocks__/sign-up-user";
+import { mockNotifySalesDepartment } from "../__mocks__/observers/test-notify-sales-observers";
+import { mockSendEmails } from "../__mocks__/observers/test-send-email-observers";
 import { ObserverContainer } from "../lib/src/observers-container/domain/ObserverContainer";
 
 describe("On Observer", () => {
@@ -64,7 +63,7 @@ describe("On Observer", () => {
     expect(productObserves?.size).toBe(1);
   });
 
-  it("On buildSubject", () => {
+  it("Add subject", () => {
     const container = new ObserverContainer();
     const notif = jest.fn();
 
@@ -74,7 +73,7 @@ describe("On Observer", () => {
       observer: { update: notif },
     });
 
-    const subject = container.buildSubject({
+    const subject = container.addSubject({
       name: "User",
       subject: "Save",
     });
@@ -84,9 +83,8 @@ describe("On Observer", () => {
     expect(notif).toBeCalled();
   });
 
-  it(`WHEN build a Subject and call Notify Observers, 
-  THEN Observer Update method should be called`, async () => {
-    await saveUser({
+  it(`Notify Observers`, async () => {
+    await signUpUser({
       subject: buildSubject({
         name: "User",
         subject: "SignUp",
@@ -94,19 +92,10 @@ describe("On Observer", () => {
       userRepo: userRepo,
     });
 
-    mockNotifySalesDepartment.onSignUpUser.forEach(observer => {
-      expect(observer.update).toBeCalledWith(fakeUser);
-    })
-    mockNotifySalesDepartment.onUserContactSales.forEach(observer => {
-      expect(observer.update).not.toBeCalled();
-    })
+    expect(mockNotifySalesDepartment.onSignUpUser).toBeCalledWith(fakeUser);
+    expect(mockSendEmails.onSignUpUser).toBeCalledWith(fakeUser);
 
-    mockSendEmails.onSignUpUser.forEach(observer => {
-      expect(observer.update).toBeCalledWith(fakeUser);
-    })
-    mockSendEmails.onBuyProduct.forEach(observer => {
-      expect(observer.update).not.toBeCalled();
-    })
-
+    expect(mockNotifySalesDepartment.onUserContactSales).not.toBeCalled();
+    expect(mockSendEmails.onBuyProduct).not.toBeCalled();
   });
 });

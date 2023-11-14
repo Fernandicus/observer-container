@@ -1,6 +1,6 @@
 import { loadObservers } from "../lib/src";
-import { notifySalesDepartmentObservers } from "./test-notify-sales-observers";
-import { sendEmailsObservers } from "./test-send-email-observers";
+import { notifySalesDepartmentObservers } from "./observers/test-notify-sales-observers";
+import { sendEmailsObservers } from "./observers/test-send-email-observers";
 
 export const buildSubject = loadObservers([
   ...sendEmailsObservers,

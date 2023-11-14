@@ -1,9 +1,9 @@
-import { Observer } from "./Observer";
+import { Observer } from "./interfaces/Observer";
 
 export class Subject<T> {
   readonly observers: Set<Observer<T>>;
   readonly subject: string;
-  
+
   constructor(props: { observers: Set<Observer<T>>; subject: string }) {
     this.observers = props.observers;
     this.subject = props.subject;

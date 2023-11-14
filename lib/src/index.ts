@@ -1,21 +1,18 @@
-import { AddObservers } from "./observers-container/application/AddObservers";
+import { BuildObservers } from "./observers-container/application/BuildObservers";
 import { BuildSubject } from "./observers-container/application/BuildSubject";
+import { CreateObserver } from "./observers-container/application/CreateObserver";
 import { ObserverContainer } from "./observers-container/domain/ObserverContainer";
-import { Observer } from "./observers-container/domain/interfaces/Observer";
 
-type LoadObserversProps = Parameters<
-  BuildSubject["withObserversLoaders"]
->[number];
-type AddObserversProps = Parameters<AddObservers["add"]>[number];
+type LoadObserversProps = Parameters<BuildObservers["build"]>[number];
+type AddObserversProps = Parameters<BuildObservers["build"]>[number];
 
 const observerContainer = new ObserverContainer();
+const observerCreator = new CreateObserver(observerContainer);
 const buildSubject = new BuildSubject(observerContainer);
-const observersAdder = new AddObservers(observerContainer);
+const observersBuilder = new BuildObservers();
 
-export const createObserver = <T>(onUpdate: (data: T) => void): Observer<T> => {
-  return {
-    update: onUpdate,
-  };
+export const createObserver = <T>(onUpdate: (data: T) => void) => {
+  return observerCreator.create(onUpdate);
 };
 
 export const loadObservers = (props: LoadObserversProps) => {
@@ -23,5 +20,5 @@ export const loadObservers = (props: LoadObserversProps) => {
 };
 
 export const addObservers = (props: AddObserversProps) => {
-  return observersAdder.add(props);
+  return observersBuilder.build(props);
 };
