@@ -22,7 +22,7 @@ export class ObserverContainer {
 
   addSubject({ name, subject }: ObserverTags): Subject<unknown> {
     if (!this.subjects.has(name)) {
-      this.addSubject({ name, subject });
+      this.addSubjectHelper({ name, subject });
       return this.buildFoundSubject({ name, subject });
     }
 
@@ -42,6 +42,19 @@ export class ObserverContainer {
     return (props: ObserverTags) => {
       return this.subjectBuilderHelper({ ...props, observersLoader });
     };
+  }
+
+  private addSubjectHelper({ name, subject }: ObserverTags): void {
+    const subjectInstance = new Subject({
+      observers: new Set([]),
+      subject,
+    });
+
+    if (this.subjects.has(name)) {
+      this.subjects.get(name)!.add(subjectInstance);
+    } else {
+      this.subjects.set(name, new Set([subjectInstance]));
+    }
   }
 
   private observersLoaderHelper(props: {
