@@ -4,6 +4,7 @@ import { signUpUser, userRepo } from "../__mocks__/sign-up-user";
 import { mockNotifySalesDepartment } from "../__mocks__/observers/test-notify-sales-observers";
 import { mockSendEmails } from "../__mocks__/observers/test-send-email-observers";
 import { ObserverContainer } from "../lib/src/observers-container/domain/ObserverContainer";
+import { SubjectsMap } from "../lib/src/observers-container/domain/SubjectsMap";
 
 describe("On Observer", () => {
   beforeEach(() => {
@@ -11,18 +12,20 @@ describe("On Observer", () => {
   });
 
   it(`Add subjects`, async () => {
-    const container = new ObserverContainer();
+    const subjectsMap = new SubjectsMap();
+    const container = new ObserverContainer({ subjectsMap });
 
     container.addSubject({ name: "User", subject: "Save" });
     container.addSubject({ name: "User", subject: "Notify" });
     container.addSubject({ name: "Product", subject: "Buy" });
 
-    expect(container.subjects.has("User")).toBeTruthy();
-    expect(container.subjects.has("Product")).toBeTruthy();
+    expect(subjectsMap.hasName("User")).toBeTruthy();
+    expect(subjectsMap.hasName("Product")).toBeTruthy();
   });
 
   it("Add observers", () => {
-    const container = new ObserverContainer();
+    const subjectsMap = new SubjectsMap();
+    const container = new ObserverContainer({ subjectsMap });
 
     container.addObserver({
       name: "User",
@@ -64,7 +67,8 @@ describe("On Observer", () => {
   });
 
   it("Add subject", () => {
-    const container = new ObserverContainer();
+    const subjectsMap = new SubjectsMap();
+    const container = new ObserverContainer({ subjectsMap });
     const notif = jest.fn();
 
     container.addObserver({

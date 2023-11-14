@@ -1,8 +1,13 @@
 import { Subject } from "./Subject";
+import { SubjectsMap } from "./SubjectsMap";
 
 export class ObserverContainer {
   readonly observers: Param.ObserversMap = new Map();
-  readonly subjects: Param.SubjectsMap = new Map();
+  private subjectsMap: SubjectsMap;
+
+  constructor({ subjectsMap }: { subjectsMap: SubjectsMap }) {
+    this.subjectsMap = subjectsMap;
+  }
 
   addObserver<T>(props: Prop.AddObserver<T>): void {
     const { name, subject, observer } = props;
@@ -21,7 +26,7 @@ export class ObserverContainer {
   }
 
   addSubject({ name, subject }: ObserverTags): Subject<unknown> {
-    if (!this.subjects.has(name)) {
+    if (!this.subjectsMap.hasName(name)) {
       this.addSubjectHelper({ name, subject });
       return this.buildFoundSubject({ name, subject });
     }
@@ -50,11 +55,10 @@ export class ObserverContainer {
       subject,
     });
 
-    if (this.subjects.has(name)) {
-      this.subjects.get(name)!.add(subjectInstance);
-    } else {
-      this.subjects.set(name, new Set([subjectInstance]));
-    }
+    this.subjectsMap.addSubject({
+      name,
+      subject: subjectInstance,
+    });
   }
 
   private observersLoaderHelper(props: {
@@ -80,7 +84,7 @@ export class ObserverContainer {
 
     observersLoader({ name, subject });
 
-    if (!this.subjects.has(name)) {
+    if (!this.subjectsMap.hasName(name)) {
       this.addSubject({ name, subject });
       return this.buildFoundSubject({ name, subject });
     }
@@ -108,8 +112,7 @@ export class ObserverContainer {
   }
 
   private findSubject({ name, subject }: ObserverTags) {
-    const subjectFoundSet = this.subjects.get(name)!;
-    const subjectFoundArray = Array.from(subjectFoundSet);
+    const subjectFoundArray = this.subjectsMap.getArrayFromName(name);
     const subjectFound = subjectFoundArray.find(
       (instance) => instance.subject === subject
     );
