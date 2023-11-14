@@ -4,12 +4,12 @@ import { ObserverContainer } from "./observers-container/domain/ObserverContaine
 import { Observer } from "./observers-container/domain/interfaces/Observer";
 
 type LoadObserversProps = Parameters<
-  BuildSubject["loadObserversAndBuildSubject"]
+  BuildSubject["withObserversLoaders"]
 >[number];
 type AddObserversProps = Parameters<AddObservers["add"]>[number];
 
 const observerContainer = new ObserverContainer();
-const subjectsBuilder = new BuildSubject(observerContainer);
+const buildSubject = new BuildSubject(observerContainer);
 const observersAdder = new AddObservers(observerContainer);
 
 export const createObserver = <T>(onUpdate: (data: T) => void): Observer<T> => {
@@ -19,7 +19,7 @@ export const createObserver = <T>(onUpdate: (data: T) => void): Observer<T> => {
 };
 
 export const loadObservers = (props: LoadObserversProps) => {
-  return subjectsBuilder.loadObserversAndBuildSubject(props);
+  return buildSubject.withObserversLoaders(props);
 };
 
 export const addObservers = (props: AddObserversProps) => {

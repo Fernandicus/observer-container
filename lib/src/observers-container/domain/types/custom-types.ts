@@ -16,3 +16,11 @@ export type ObserversMap = Map<
   Map<string, Set<Observer<unknown>>>
 >;
 export type SubjectsMap = Map<string, Set<Subject<unknown>>>;
+export type ObserversLoaderMap = Map<
+  string,
+  Map<string, Set<()=>void>>
+>;
+export type ObserverTags = {
+  name: string;
+  subject: string;
+};

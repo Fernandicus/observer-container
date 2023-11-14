@@ -2,11 +2,11 @@ import { Observer } from "./Observer";
 
 export class Subject<T> {
   readonly observers: Set<Observer<T>>;
-  readonly type: string;
+  readonly subject: string;
   
-  constructor(props: { observers: Set<Observer<T>>; type: string }) {
+  constructor(props: { observers: Set<Observer<T>>; subject: string }) {
     this.observers = props.observers;
-    this.type = props.type;
+    this.subject = props.subject;
   }
 
   addObserver(observer: Observer<T>): void {

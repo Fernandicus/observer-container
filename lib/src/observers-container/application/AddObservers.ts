@@ -1,67 +1,51 @@
 import { Observer } from "../domain/interfaces/Observer";
 import { ObserverContainer } from "../domain/ObserverContainer";
-import { KeyValuePairs } from "../domain/types/custom-types";
+import { ObserverTags } from "../domain/types/custom-types";
 
-type LinkObserverToSubjectProps = Parameters<
-  ObserverContainer["linkObserverToSubject"]
->[number];
-type AddObserverProps = {
-  type: string;
+type AddProps = ObserverTags & {
   observers: Observer<unknown>[];
-}[];
-type LinkObserversProps = Partial<{
-  [type: string]: AddObserverProps;
-}>;
-
-type AddObserversProps = { name: string; subjects: AddObserverProps };
-type Observers = Parameters<ObserverContainer["loadObservers"]>[number];
+};
+type AddObserverLoader = ObserverTags & {
+  observer: Observer<unknown>;
+};
+type ObserversLoaders = ObserverTags & {
+  observers: (() => void)[];
+};
 
 export class AddObservers {
   constructor(private observerContainer: ObserverContainer) {}
 
-  add(paramsList: AddObserversProps[]) {
-    let observers: Observers = {};
-    for (const params of paramsList) {
-      const { name, subjects } = params;
-
-      const obs = this.sortSubjects({
-        [name]: subjects,
-      });
-      
-      observers = { ...observers, ...obs };
-    }
+  add(paramsList: AddProps[]): ObserversLoaders[] {
+    const observers = this.observersToLoaders(paramsList);
     return observers;
   }
-  
-  private sortSubjects(props: LinkObserversProps) {
-    const subjectToObservers: KeyValuePairs = {};
 
-    for (const name in props) {
-      const subjectDataList = props[name];
+  private observersToLoaders(paramsList: AddProps[]) {
+    return paramsList.map((props): ObserversLoaders => {
+      const { name, subject } = props;
 
-      if (!subjectDataList) return;
+      const observersLoaders = this.loadObserversLoader(props);
 
-      for (const subjectData of subjectDataList) {
-        const { observers, type } = subjectData;
-
-        observers.forEach((observer, i) => {
-          const linkObserver = this.linkObserversToSubject({
-            name,
-            type: type,
-            observer,
-          });
-
-          subjectToObservers[type] = {
-            ...subjectToObservers[type],
-            [i]: linkObserver,
-          };
-        });
-      }
-    }
-    return subjectToObservers;
+      return {
+        name,
+        subject,
+        observers: observersLoaders,
+      };
+    });
   }
 
-  private linkObserversToSubject(props: LinkObserverToSubjectProps) {
-    return () => this.observerContainer.linkObserverToSubject(props);
+  private loadObserversLoader({ name, subject, observers }: AddProps) {
+    return observers.map((observer) => {
+      return this.addObserverLoader({
+        name,
+        subject,
+        observer,
+      });
+    });
+  }
+
+  private addObserverLoader({ name, subject, observer }: AddObserverLoader) {
+    return () =>
+      this.observerContainer.addObserver({ name, subject, observer });
   }
 }

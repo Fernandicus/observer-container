@@ -5,16 +5,17 @@ import {
   ObserversMap,
   SubjectsMap,
   ClassType,
+  ObserverTags,
 } from "./types/custom-types";
 
 export class ObserverContainer {
   readonly observers: ObserversMap = new Map();
   readonly subjects: SubjectsMap = new Map();
 
-  addSubject({ name, type }: AddSubjectProps) {
+  addSubject({ name, subject }: ObserverTags): void {
     const subjectInstance = new Subject({
       observers: new Set([]),
-      type,
+      subject,
     });
 
     if (this.subjects.has(name)) {
@@ -24,62 +25,86 @@ export class ObserverContainer {
     }
   }
 
-  linkObserverToSubject<T>(props: LinkObserverToSubjectProps<T>) {
-    const { name, type, observer } = props;
+  addObserver<T>(props: AddObserverProps<T>): void {
+    const { name, subject, observer } = props;
 
     if (this.observers.has(name)) {
-      this.observers.get(name)!.get(type)!.add(observer);
+      if (this.observers.get(name)!.has(subject)) {
+        this.observers.get(name)!.get(subject)!.add(observer);
+      } else {
+        this.observers.get(name)!.set(subject, new Set([observer]));
+      }
     } else {
       const newObserverMap = new Map();
-      newObserverMap.set(type, new Set([observer]));
+      newObserverMap.set(subject, new Set([observer]));
       this.observers.set(name, newObserverMap);
     }
   }
 
-  loadObservers(observers: LoadObserversProps) {
-    return (subjectType: string) => {
-      const observersInSubject = observers[subjectType];
-      this.observersLoader(observersInSubject);
+  buildSubject({ name, subject }: ObserverTags): Subject<unknown> {
+    if (!this.subjects.has(name)) {
+      this.addSubject({ name, subject });
+      return this.buildFoundSubject({ name, subject });
+    }
+
+    return this.buildFoundSubject({ name, subject });
+  }
+
+  loadObservers(observers: LoadObserversProps[]): ObserversLoader {
+    return (props: ObserverTags) => {
+      this.observersLoaderHelper({
+        loadObserversProps: observers,
+        observersLoaderProps: props,
+      });
     };
   }
 
-  private observersLoader(observersInSubject: () => void) {
-    if (observersInSubject) {
-      const observers = Object.values(observersInSubject);
-      for (const observer of observers) {
+  private observersLoaderHelper(props: {
+    observersLoaderProps: ObserverTags;
+    loadObserversProps: LoadObserversProps[];
+  }) {
+    const { loadObserversProps, observersLoaderProps } = props;
+    const { name, subject } = observersLoaderProps;
+    
+    return loadObserversProps.forEach((load) => {
+      const match = load.name === name && load.subject === subject;
+
+      if (!match) return;
+
+      load.observers.forEach((observer) => {
         observer();
-      }
-    }
+      });
+    });
   }
 
-  buildSubject<T>(
-    loadObservers: (subjectType: string) => void
-  ): (props: { name: string; subjectType: string }) => Subject<T> {
-    return (props: BuildSubjectProps) =>
-      this.loadSubject({ ...props, loadObservers });
+  subjectBuilder<T>(observersLoader: ObserversLoader): SubjectBuilder<T> {
+    return (props: ObserverTags) => {
+      return this.subjectBuilderHelper({ ...props, observersLoader });
+    };
   }
 
-  private loadSubject(props: LoadSubjectProps) {
-    const { name, subjectType, loadObservers } = props;
-    loadObservers(subjectType);
+  private subjectBuilderHelper(
+    props: ObserverTags & { observersLoader: ObserversLoader }
+  ) {
+    const { name, subject, observersLoader } = props;
+
+    observersLoader({ name, subject });
 
     if (!this.subjects.has(name)) {
-      this.addSubject({ name, type: subjectType });
-      return this.buildFoundSubject({ name, subjectType });
+      this.addSubject({ name, subject });
+      return this.buildFoundSubject({ name, subject });
     }
 
-    return this.buildFoundSubject({ name, subjectType });
+    return this.buildFoundSubject({ name, subject });
   }
 
-  private buildFoundSubject(props: BuildSubjectProps) {
-    const { name, subjectType } = props;
-
-    const subjectFound = this.findSubject({ name, subjectType });
+  private buildFoundSubject({ name, subject }: ObserverTags) {
+    const subjectFound = this.findSubject({ name, subject });
 
     if (subjectFound) {
       const observers = this.findObservers({
         name,
-        subjectType,
+        subject,
       });
       for (const observer of observers) {
         subjectFound.addObserver(observer);
@@ -88,24 +113,24 @@ export class ObserverContainer {
     }
     return new Subject({
       observers: new Set([]),
-      type: subjectType,
+      subject,
     });
   }
 
-  private findSubject({ name, subjectType }: FindProps) {
+  private findSubject({ name, subject }: ObserverTags) {
     const subjectFoundSet = this.subjects.get(name)!;
     const subjectFoundArray = Array.from(subjectFoundSet);
     const subjectFound = subjectFoundArray.find(
-      (instance) => instance.type === subjectType
+      (instance) => instance.subject === subject
     );
     return subjectFound;
   }
 
-  private findObservers({ name, subjectType }: FindProps) {
+  private findObservers({ name, subject }: ObserverTags) {
     const observersFound = this.observers.get(name);
 
-    if (observersFound && observersFound.has(subjectType)) {
-      const subjectFound = observersFound.get(subjectType)!;
+    if (observersFound && observersFound.has(subject)) {
+      const subjectFound = observersFound.get(subject)!;
       return Array.from(subjectFound);
     }
 
@@ -113,24 +138,14 @@ export class ObserverContainer {
   }
 }
 
-type FindProps = {
-  name: string;
-  subjectType: string;
-};
-type AddSubjectProps = {
-  name: string;
-  type: string;
-};
-
-type LoadSubjectProps = {
-  name: string;
-  subjectType: string;
-  loadObservers: (subjectType: string) => void;
-};
-type BuildSubjectProps = { name: string; subjectType: string };
-type LinkObserverToSubjectProps<T> = {
-  name: string;
-  type: string;
+type AddObserverProps<T> = ObserverTags & {
   observer: Observer<T>;
 };
-type LoadObserversProps = { [subjectType: string]: () => void };
+type LoadObserversProps = ObserverTags & {
+  observers: (() => void)[];
+};
+type ObserversLoader = (props: ObserverTags) => void;
+type SubjectBuilder<T> = (props: ObserverTags) => Subject<T>;
+type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};

@@ -1,27 +1,21 @@
-import { addObservers } from "../lib/src";
+import { addObservers, createObserver } from "../lib/src";
 import { Observer } from "../lib/src/observers-container/domain/interfaces/Observer";
 
-export const testSendEmailObservers = (observers: {
-  saveUser: Observer<unknown>[];
-  buyProduct: Observer<unknown>[];
-}) =>
+export const mockSendEmails = {
+  onSignUpUser: [createObserver(jest.fn())],
+  onBuyProduct: [createObserver(jest.fn())],
+} satisfies { [key: string]: Observer<unknown>[] };
+
+export const sendEmailsObservers = 
   addObservers([
     {
       name: "User",
-      subjects: [
-        {
-          type: "Save",
-          observers: observers.saveUser,
-        },
-      ],
+      subject: "SignUp",
+      observers: mockSendEmails.onSignUpUser,
     },
     {
       name: "Product",
-      subjects: [
-        {
-          type: "Buy",
-          observers: observers.saveUser,
-        },
-      ],
+      subject: "Buy",
+      observers: mockSendEmails.onBuyProduct
     },
   ]);
