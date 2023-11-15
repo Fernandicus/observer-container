@@ -1,7 +1,7 @@
 import { Subject } from "./Subject";
 
 export class SubjectsMap {
-  readonly subjects: Param.SubjectsMap = new Map();
+  private subjects: Param.SubjectsMap = new Map();
 
   hasName(name: string) {
     return this.subjects.has(name);
@@ -23,5 +23,13 @@ export class SubjectsMap {
     } else {
       this.subjects.set(name, new Set([subject]));
     }
+  }
+
+  findSubject({ name, subject }: ObserverTags) {
+    const subjectFoundArray = this.getArrayFromName(name);
+    const subjectFound = subjectFoundArray.find(
+      (instance) => instance.subject === subject
+    );
+    return subjectFound;
   }
 }

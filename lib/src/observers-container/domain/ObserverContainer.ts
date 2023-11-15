@@ -1,37 +1,37 @@
+import { ObserversMap } from "./ObserversMap";
 import { Subject } from "./Subject";
 import { SubjectsMap } from "./SubjectsMap";
 
-export class ObserverContainer {
-  readonly observers: Param.ObserversMap = new Map();
-  private subjectsMap: SubjectsMap;
+type Props = {
+  subjectsMap: SubjectsMap;
+  observersMap: ObserversMap;
+};
 
-  constructor({ subjectsMap }: { subjectsMap: SubjectsMap }) {
+export class ObserverContainer {
+  private subjectsMap: SubjectsMap;
+  private observersMap: ObserversMap;
+
+  constructor({ subjectsMap, observersMap }: Props) {
     this.subjectsMap = subjectsMap;
+    this.observersMap = observersMap;
   }
 
   addObserver<T>(props: Prop.AddObserver<T>): void {
-    const { name, subject, observer } = props;
+    this.observersMap.addObserver(props);
 
-    if (this.observers.has(name)) {
-      if (this.observers.get(name)!.has(subject)) {
-        this.observers.get(name)!.get(subject)!.add(observer);
-      } else {
-        this.observers.get(name)!.set(subject, new Set([observer]));
-      }
-    } else {
-      const newObserverMap = new Map();
-      newObserverMap.set(subject, new Set([observer]));
-      this.observers.set(name, newObserverMap);
+    if (!this.subjectsMap.hasName(props.name)) {
+      this.addSubjectHelper(props);
     }
   }
 
-  addSubject({ name, subject }: ObserverTags): Subject<unknown> {
-    if (!this.subjectsMap.hasName(name)) {
-      this.addSubjectHelper({ name, subject });
-      return this.buildFoundSubject({ name, subject });
-    }
+  addSubject({ name, subject }: ObserverTags): void {
+    if (this.subjectsMap.hasName(name)) return;
 
-    return this.buildFoundSubject({ name, subject });
+    this.addSubjectHelper({ name, subject });
+  }
+
+  buildSubject(props: ObserverTags) {
+    return this.buildFoundSubject(props);
   }
 
   loadObservers(observers: Prop.LoadObserver[]): ObserverLoader {
@@ -93,40 +93,23 @@ export class ObserverContainer {
   }
 
   private buildFoundSubject({ name, subject }: ObserverTags) {
-    const subjectFound = this.findSubject({ name, subject });
+    const subjectFound = this.subjectsMap.findSubject({ name, subject });
 
-    if (subjectFound) {
-      const observers = this.findObservers({
-        name,
+    if (!subjectFound)
+      return new Subject({
+        observers: new Set([]),
         subject,
       });
-      for (const observer of observers) {
-        subjectFound.addObserver(observer);
-      }
-      return subjectFound;
-    }
-    return new Subject({
-      observers: new Set([]),
+
+    const observers = this.observersMap.findObservers({
+      name,
       subject,
     });
-  }
 
-  private findSubject({ name, subject }: ObserverTags) {
-    const subjectFoundArray = this.subjectsMap.getArrayFromName(name);
-    const subjectFound = subjectFoundArray.find(
-      (instance) => instance.subject === subject
-    );
+    observers.forEach((observer) => {
+      subjectFound.addObserver(observer);
+    });
+
     return subjectFound;
-  }
-
-  private findObservers({ name, subject }: ObserverTags) {
-    const observersFound = this.observers.get(name);
-
-    if (observersFound && observersFound.has(subject)) {
-      const subjectFound = observersFound.get(subject)!;
-      return Array.from(subjectFound);
-    }
-
-    return [];
   }
 }
