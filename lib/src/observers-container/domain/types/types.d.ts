@@ -15,7 +15,7 @@ namespace Param {
 }
 
 namespace Prop {
-  type AddObserver<T> = CustomProps.Prettify<
+  type AddObserver<T> = Prettify<
     ObserverTags & {
       observer: Observer<T>;
     }

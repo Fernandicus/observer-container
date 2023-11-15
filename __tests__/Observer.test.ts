@@ -5,6 +5,7 @@ import { mockNotifySalesDepartment } from "../__mocks__/observers/test-notify-sa
 import { mockSendEmails } from "../__mocks__/observers/test-send-email-observers";
 import { ObserverContainer } from "../lib/src/observers-container/domain/ObserverContainer";
 import { SubjectsMap } from "../lib/src/observers-container/domain/SubjectsMap";
+import { ObserversMap } from "../lib/src/observers-container/domain/ObserversMap";
 
 describe("On Observer", () => {
   beforeEach(() => {
@@ -13,7 +14,8 @@ describe("On Observer", () => {
 
   it(`Add subjects`, async () => {
     const subjectsMap = new SubjectsMap();
-    const container = new ObserverContainer({ subjectsMap });
+    const observersMap = new ObserversMap();
+    const container = new ObserverContainer({ subjectsMap, observersMap });
 
     container.addSubject({ name: "User", subject: "Save" });
     container.addSubject({ name: "User", subject: "Notify" });
@@ -25,7 +27,8 @@ describe("On Observer", () => {
 
   it("Add observers", () => {
     const subjectsMap = new SubjectsMap();
-    const container = new ObserverContainer({ subjectsMap });
+    const observersMap = new ObserversMap();
+    const container = new ObserverContainer({ subjectsMap, observersMap });
 
     container.addObserver({
       name: "User",
@@ -42,46 +45,78 @@ describe("On Observer", () => {
     container.addObserver({
       name: "User",
       subject: "Notify",
-      observer: { update: jest.fn() },
+      observer: { update: () => {} },
     });
 
     container.addObserver({
       name: "Product",
       subject: "Buy",
-      observer: { update: jest.fn() },
+      observer: { update: () => {} },
     });
 
-    const userHasSave = container.observers.get("User")?.has("Save");
-    const userObservers = container.observers.get("User");
-    const userSaveObservers = container.observers.get("User")!.get("Save");
-    const userHasNotify = container.observers.get("User")?.has("Notify");
-    const productHasBuy = container.observers.get("Product")?.has("Buy");
-    const productObserves = container.observers.get("Product");
+    const userSaveObservers = observersMap.findObservers({
+      name: "User",
+      subject: "Save",
+    });
+    const userNotifyObservers = observersMap.findObservers({
+      name: "User",
+      subject: "Notify",
+    });
+    const userProductObservers = observersMap.findObservers({
+      name: "Product",
+      subject: "Buy",
+    });
 
-    expect(userHasSave).toBeTruthy();
-    expect(userHasNotify).toBeTruthy();
-    expect(userObservers?.size).toBe(2);
-    expect(userSaveObservers?.size).toBe(2);
-    expect(productHasBuy).toBeTruthy();
-    expect(productObserves?.size).toBe(1);
+    expect(userSaveObservers.length).toBe(2);
+    expect(userNotifyObservers.length).toBe(1);
+    expect(userProductObservers.length).toBe(1);
   });
 
   it("Add subject", () => {
     const subjectsMap = new SubjectsMap();
-    const container = new ObserverContainer({ subjectsMap });
-    const notif = jest.fn();
+    const observersMap = new ObserversMap();
+    const container = new ObserverContainer({ subjectsMap, observersMap });
 
-    container.addObserver({
+    const notif = jest.fn();
+    const observerTag = {
       name: "User",
       subject: "Save",
+    };
+
+    container.addObserver({
+      ...observerTag,
       observer: { update: notif },
     });
 
-    const subject = container.addSubject({
+    container.addSubject(observerTag);
+
+    const subject = container.buildSubject(observerTag);
+
+    subject.notifyObservers({});
+
+    expect(notif).toBeCalled();
+  });
+
+  it("NOT Add Observer after adding subject", () => {
+    const subjectsMap = new SubjectsMap();
+    const observersMap = new ObserversMap();
+    const container = new ObserverContainer({ subjectsMap, observersMap });
+
+    const notif = jest.fn();
+    const observerTag = {
       name: "User",
       subject: "Save",
+    };
+
+    container.addSubject(observerTag);
+    
+    container.addObserver({
+      ...observerTag,
+      observer: { update: notif },
     });
 
+    const subject = container.buildSubject(observerTag);
+    
     subject.notifyObservers({});
 
     expect(notif).toBeCalled();
