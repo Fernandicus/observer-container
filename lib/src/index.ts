@@ -1,5 +1,6 @@
 import { buildSubject, observerCreator } from "./observers-container";
 import { BuildSubject } from "./observers-container/application/BuildSubject";
+import { ObserverTags, Prop } from "./observers-container/entities/types/types";
 
 type AddObserver<T> = ObserverTags & {
   observers: ReturnType<typeof createObserver<T>>[];

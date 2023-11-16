@@ -1,4 +1,5 @@
 import { Subject } from "./Subject";
+import { ObserverTags, Param } from "./types/types";
 
 export class SubjectsMap {
   private subjects: Param.SubjectsMap = new Map();

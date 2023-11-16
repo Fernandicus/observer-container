@@ -1,5 +1,6 @@
 import { ObserverContainer } from "../entities/ObserverContainer";
 import { Observer } from "../entities/interfaces/Observer";
+import { ObserverTags } from "../entities/types/types";
 
 type AddObserver<T> = ObserverTags & { onUpdate: (data: T) => void };
 

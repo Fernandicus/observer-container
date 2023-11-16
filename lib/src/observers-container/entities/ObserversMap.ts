@@ -1,4 +1,5 @@
 import { Observer } from "./interfaces/Observer";
+import { ObserverTags, Param, Prop } from "./types/types";
 
 export class ObserversMap {
   private observers: Param.ObserversMap = new Map();

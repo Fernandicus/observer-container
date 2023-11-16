@@ -1,5 +1,6 @@
 import { loadObservers } from "../..";
 import { ObserverContainer } from "../entities/ObserverContainer";
+import { Prop } from "../entities/types/types";
 
 type LoadReturn = ReturnType<ObserverContainer["subjectBuilder"]>;
 

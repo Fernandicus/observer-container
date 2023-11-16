@@ -1,6 +1,7 @@
 import { ObserversMap } from "./ObserversMap";
 import { Subject } from "./Subject";
 import { SubjectsMap } from "./SubjectsMap";
+import { ObserverLoader, ObserverTags, Prop, Return } from "./types/types";
 
 type Props = {
   subjectsMap: SubjectsMap;
