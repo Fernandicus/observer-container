@@ -3,9 +3,9 @@ import { fakeUser } from "../__mocks__/fake-user";
 import { signUpUser, userRepo } from "../__mocks__/sign-up-user";
 import { mockNotifySalesDepartment } from "../__mocks__/observers/test-notify-sales-observers";
 import { mockSendEmails } from "../__mocks__/observers/test-send-email-observers";
-import { ObserverContainer } from "../lib/src/observers-container/domain/ObserverContainer";
-import { SubjectsMap } from "../lib/src/observers-container/domain/SubjectsMap";
-import { ObserversMap } from "../lib/src/observers-container/domain/ObserversMap";
+import { ObserverContainer } from "../lib/src/observers-container/entities/ObserverContainer";
+import { SubjectsMap } from "../lib/src/observers-container/entities/SubjectsMap";
+import { ObserversMap } from "../lib/src/observers-container/entities/ObserversMap";
 
 describe("On Observer", () => {
   beforeEach(() => {

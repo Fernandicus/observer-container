@@ -1,4 +1,4 @@
-import { buildSubject, observerCreator } from "./injection-container";
+import { buildSubject, observerCreator } from "./observers-container";
 import { BuildSubject } from "./observers-container/application/BuildSubject";
 
 type AddObserver<T> = ObserverTags & {

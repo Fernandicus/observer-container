@@ -1,4 +1,4 @@
-import { Subject } from "../lib/src/observers-container/domain/Subject";
+import { Subject } from "../lib/src/observers-container/entities/Subject";
 import { fakeUser } from "./fake-user";
 import { User } from "./types/User";
 

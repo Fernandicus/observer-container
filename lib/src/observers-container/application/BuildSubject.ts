@@ -1,5 +1,5 @@
 import { loadObservers } from "../..";
-import { ObserverContainer } from "../domain/ObserverContainer";
+import { ObserverContainer } from "../entities/ObserverContainer";
 
 type LoadReturn = ReturnType<ObserverContainer["subjectBuilder"]>;
 

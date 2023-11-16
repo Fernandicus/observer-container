@@ -1,5 +1,5 @@
-import { ObserverContainer } from "../domain/ObserverContainer";
-import { Observer } from "../domain/interfaces/Observer";
+import { ObserverContainer } from "../entities/ObserverContainer";
+import { Observer } from "../entities/interfaces/Observer";
 
 type AddObserver<T> = ObserverTags & { onUpdate: (data: T) => void };
 
