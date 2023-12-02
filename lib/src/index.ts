@@ -6,14 +6,18 @@ type AddObserver<T> = ObserverTags & {
   observers: ReturnType<typeof createObserver<T>>[];
 };
 type LoadObservers = Prop.LoadObserver[];
-type ReturnObservers = ReturnType<BuildSubject["withObserversLoaders"]>;
+type ReturnObservers = {
+  build: ReturnType<BuildSubject["withObserversLoaders"]>;
+};
 
 export function createObserver<T>(onUpdate: (data: T) => void) {
   return observerCreator.create(onUpdate);
 }
 
 export function loadObservers(props: LoadObservers): ReturnObservers {
-  return buildSubject.withObserversLoaders(props);
+  return {
+    build: buildSubject.withObserversLoaders(props),
+  };
 }
 
 export function addObservers<T>(observers: AddObserver<T>[]): AddObserver<T>[] {

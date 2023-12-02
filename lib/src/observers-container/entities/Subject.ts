@@ -18,8 +18,8 @@ export class Subject<T> {
   }
 
   notifyObservers(data: T): void {
-    for (const observer of this.observers) {
+    this.observers.forEach((observer) => {
       observer.update(data);
-    }
+    });
   }
 }
