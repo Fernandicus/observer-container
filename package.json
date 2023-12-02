@@ -17,6 +17,7 @@
     }
   },
   "scripts": {
+    "type-checking":"tsc --noEmit",
     "test": "jest",
     "build": "tsc -p tsconfig.build.json && vite build"
   },
