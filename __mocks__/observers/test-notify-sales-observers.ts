@@ -1,4 +1,5 @@
 import { addObservers, createObserver } from "../../lib/src";
+import { userTagsHub } from "./tags-hub";
 
 
 export const mockNotifySalesDepartment = {
@@ -8,13 +9,13 @@ export const mockNotifySalesDepartment = {
 
 export const notifySalesDepartmentObservers = addObservers([
   {
-    name: "User",
-    subject: "SignUp",
+    name: userTagsHub.getName(),
+    subject: userTagsHub.getSubject("SignUp"),
     observers: [createObserver(mockNotifySalesDepartment.onSignUpUser)]
   },
   {
-    name: "User",
-    subject: "ContactSales",
+    name: userTagsHub.getName(),
+    subject: userTagsHub.getSubject("ContactSales"),
     observers: [createObserver(mockNotifySalesDepartment.onUserContactSales)]
   },
 ]);
