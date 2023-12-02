@@ -1,4 +1,4 @@
-import { addObservers, createObserver } from "../lib/src";
+import { addObservers, createObserver } from "../../../lib/src";
 import { productTagsHub, userTagsHub } from "./tags-hub";
 
 export const mockSendEmails = {

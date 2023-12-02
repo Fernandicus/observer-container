@@ -5,7 +5,7 @@ import { User } from "../types/User";
 export const userRepo = async (user: User) => {
   await new Promise((resolve) => {
     setTimeout(() => {
-      console.log(`Saving user ${user.name} . . . .`);
+      console.log(`Saving user ${user.name} in DB . . . .`);
       resolve(() => {});
     }, 2500);
   });

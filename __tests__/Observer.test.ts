@@ -1,8 +1,8 @@
-import { observers } from "../__mocks__/build-subject";
+import { observers } from "../__mocks__/observers-container/loaded-observers";
 import { fakeUser } from "../__mocks__/use-case/fake-user";
 import { signUpUser, userRepo } from "../__mocks__/use-case/signup-user";
-import { mockNotifySalesDepartment } from "../__mocks__/notify-sales-observers";
-import { mockSendEmails } from "../__mocks__/send-email-observers";
+import { mockNotifySalesDepartment } from "../__mocks__/observers-container/observers/notify-sales-observers";
+import { mockSendEmails } from "../__mocks__/observers-container/observers/send-email-observers";
 import { ObserverContainer } from "../lib/src/observers-container/entities/ObserverContainer";
 import { SubjectsMap } from "../lib/src/observers-container/entities/SubjectsMap";
 import { ObserversMap } from "../lib/src/observers-container/entities/ObserversMap";
