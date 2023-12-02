@@ -1,6 +1,6 @@
-import { Subject } from "../lib/src/observers-container/entities/Subject";
+import { Subject } from "../../lib/src/observers-container/entities/Subject";
 import { fakeUser } from "./fake-user";
-import { User } from "./types/User";
+import { User } from "../types/User";
 
 export const userRepo = async (user: User) => {
   await new Promise((resolve) => {

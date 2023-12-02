@@ -1,4 +1,4 @@
-import { addObservers, createObserver } from "../../lib/src";
+import { addObservers, createObserver } from "../lib/src";
 import { userTagsHub } from "./tags-hub";
 
 

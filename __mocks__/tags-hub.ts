@@ -1,4 +1,4 @@
-import { ObserverTagHub } from "../../lib/src/observers-container/application/ObserverTagHub";
+import { ObserverTagHub } from "../lib/src/observers-container/application/ObserverTagHub";
 
 export const userTagsHub = new ObserverTagHub({
   name: "User",
