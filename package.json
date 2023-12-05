@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "dist/observer-container.umd.cjs",
+  "main": "dist/observer-containe.cjs",
   "module": "dist/observer-container.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -23,7 +23,7 @@
     "ci": "npm run lint && npm run test && npm run build"
   },
   "keywords": [],
-  "author": "",
+  "author": "Fernandicus",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^29.5.6",
