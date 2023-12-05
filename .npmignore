@@ -1,5 +1,5 @@
 src
-.changeset
 .github
 tsconfig.json
+tsconfig.build.json
 jest.config.js
