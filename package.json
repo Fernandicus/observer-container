@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "dist/observer-container.umd.cjs",
+  "main": "dist/observer-containe.cjs",
   "module": "dist/observer-container.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -17,19 +17,20 @@
     }
   },
   "scripts": {
-    "type-checking":"tsc --noEmit",
+    "lint": "tsc",
     "test": "jest",
-    "build": "tsc -p tsconfig.build.json && vite build"
+    "build": "tsup lib/index.ts --format cjs,esm --dts",
+    "ci": "npm run lint && npm run test && npm run build"
   },
   "keywords": [],
-  "author": "",
+  "author": "Fernandicus",
   "license": "ISC",
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@types/jest": "^29.5.6",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.2.2",
-    "vite": "^4.5.0",
-    "vite-plugin-dts": "^3.6.3"
+    "tsup": "^8.0.1",
+    "typescript": "^5.2.2"
   }
 }

@@ -8,7 +8,10 @@
     "strict": true ,
     "declaration": true,
     "skipLibCheck": true,
-    "outDir": "dist"
+    "noEmit": true,
+    "skipDefaultLibCheck": true,
+    "noUncheckedIndexedAccess": true,
+    "outDir": "dist",
   },
   "include": ["lib"],
   "exclude": ["node_modules", "dist"]
