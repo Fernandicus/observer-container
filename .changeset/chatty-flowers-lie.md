@@ -1,5 +1,0 @@
----
-"observer-container": patch
----
-
-changesets
