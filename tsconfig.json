@@ -9,6 +9,8 @@
     "declaration": true,
     "skipLibCheck": true,
     "noEmit": true,
+    "skipDefaultLibCheck": true,
+    "noUncheckedIndexedAccess": true,
     "outDir": "dist",
   },
   "include": ["lib"],

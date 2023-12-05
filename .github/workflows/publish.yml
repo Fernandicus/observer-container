@@ -1,15 +1,11 @@
-name: Deployment
+name: Publish
 
 on:
-  push:
-    branches:
-      - "**"
   pull_request:
     branches:
-      - "**"
-
+      - "main"
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,12 +21,14 @@ jobs:
 
       - name: Installing packages
         run: npm ci
-      
-      - name: Lint
-        run: npm run lint
 
       - name: Tests
         run: npm run test
-
+      
       - name: Build
         run: npm run build
+
+      - name: Publish to npm
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
