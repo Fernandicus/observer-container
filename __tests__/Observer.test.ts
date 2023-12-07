@@ -6,6 +6,7 @@ import { mockSendEmails } from "../__mocks__/observers-container/observers/send-
 import { ObserverContainer } from "../lib/src/observers-container/entities/ObserverContainer";
 import { SubjectsMap } from "../lib/src/observers-container/entities/SubjectsMap";
 import { ObserversMap } from "../lib/src/observers-container/entities/ObserversMap";
+import { userTagsHub } from "../__mocks__/observers-container/observers/tags-hub";
 
 describe("On Observer", () => {
   beforeEach(() => {
@@ -109,14 +110,14 @@ describe("On Observer", () => {
     };
 
     container.addSubject(observerTag);
-    
+
     container.addObserver({
       ...observerTag,
       observer: { update: notif },
     });
 
     const subject = container.buildSubject(observerTag);
-    
+
     subject.notifyObservers({});
 
     expect(notif).toBeCalled();
@@ -125,8 +126,7 @@ describe("On Observer", () => {
   it(`Notify Observers`, async () => {
     await signUpUser({
       subject: observers.build({
-        name: "User",
-        subject: "SignUp",
+        ...userTagsHub.getTagsForSubject("SignUp"),
       }),
       userRepo: userRepo,
     });

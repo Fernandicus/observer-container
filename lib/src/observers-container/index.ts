@@ -10,3 +10,4 @@ const observerContainer = new ObserverContainer({ subjectsMap, observersMap });
 
 export const observerCreator = new CreateObserver(observerContainer);
 export const buildSubject = new BuildSubject(observerContainer);
+export * from "./application/ObserverTagHub";
