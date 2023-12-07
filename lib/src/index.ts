@@ -7,7 +7,7 @@ type AddObserver<T> = ObserverTags & {
 };
 type LoadObservers = Prop.LoadObserver[];
 type ReturnObservers = {
-  build: ReturnType<BuildSubject["withObserversLoaders"]>;
+  buildSubject: ReturnType<BuildSubject["withObserversLoaders"]>;
 };
 
 export { ObserverTagHub } from "./observers-container/index";
@@ -18,7 +18,7 @@ export function createObserver<T>(onUpdate: (data: T) => void) {
 
 export function loadObservers(props: LoadObservers): ReturnObservers {
   return {
-    build: buildSubject.withObserversLoaders(props),
+    buildSubject: buildSubject.withObserversLoaders(props),
   };
 }
 

@@ -125,7 +125,7 @@ describe("On Observer", () => {
 
   it(`Notify Observers`, async () => {
     await signUpUser({
-      subject: observers.build({
+      subject: observers.buildSubject({
         ...userTagsHub.getTagsForSubject("SignUp"),
       }),
       userRepo: userRepo,
