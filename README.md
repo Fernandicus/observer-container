@@ -129,7 +129,7 @@ The `notifyObservers` will call to all the observers linked to the subject and w
 
 ---
 
-# ⚠️ Advise
+# ⚠️ Tip
 
 Using pure strings into the `name` and `subject` arguments for the methods `buildSubjet` and `addObservers` may cause typo bugs.
 
