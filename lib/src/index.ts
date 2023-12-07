@@ -10,6 +10,8 @@ type ReturnObservers = {
   build: ReturnType<BuildSubject["withObserversLoaders"]>;
 };
 
+export { ObserverTagHub } from "./observers-container/index";
+
 export function createObserver<T>(onUpdate: (data: T) => void) {
   return observerCreator.create(onUpdate);
 }
