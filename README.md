@@ -9,7 +9,7 @@ const signUpUser = (user: User) => {
   // Your sign up logic ...
   // After sing up succed ...
 
-  const subscriber = observers.build({
+  const subscriber = observers.buildSubject({
 		...userTagsHub.getTagsForSubject("SignUp"),
 	});
 
@@ -128,7 +128,7 @@ const signUpUser = (user: User) => {
   // Your sign up code ...
 
   // After singup success ...
-  const subject = observers.build({
+  const subject = observers.buildSubject({
     name: "User",
     subject: "SignUp",
   });
@@ -177,7 +177,7 @@ const signUpUser = (user: User) => {
 
   // After singup success ...
 
-  const subscriber = observers.build({
+  const subscriber = observers.buildSubject({
 		...userTagsHub.getTagsForSubject("SignUp"),
 	});
 
