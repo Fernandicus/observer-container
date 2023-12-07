@@ -9,13 +9,11 @@ export const mockNotifySalesDepartment = {
 
 export const notifySalesDepartmentObservers = addObservers([
   {
-    name: userTagsHub.getName(),
-    subject: userTagsHub.getSubject("SignUp"),
+    ...userTagsHub.getTagsForSubject("SignUp"),
     observers: [createObserver(mockNotifySalesDepartment.onSignUpUser)]
   },
   {
-    name: userTagsHub.getName(),
-    subject: userTagsHub.getSubject("ContactSales"),
+    ...userTagsHub.getTagsForSubject("ContactSales"),
     observers: [createObserver(mockNotifySalesDepartment.onUserContactSales)]
   },
 ]);

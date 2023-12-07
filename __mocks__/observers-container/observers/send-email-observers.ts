@@ -11,13 +11,11 @@ export const mockUserContactSales = jest.fn();
 
 export const sendEmailsObservers = addObservers([
   {
-    name:  userTagsHub.getName(),
-    subject: userTagsHub.getSubject("SignUp"),
+    ...userTagsHub.getTagsForSubject("SignUp"),
     observers: [createObserver(mockSendEmails.onSignUpUser)],
   },
   {
-    name: productTagsHub.getName(),
-    subject: productTagsHub.getSubject("Buy"),
+    ...productTagsHub.getTagsForSubject("Buy"),
     observers: [createObserver(mockSendEmails.onBuyProduct)],
   },
 ]);
