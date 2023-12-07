@@ -10,8 +10,8 @@ const signUpUser = (user: User) => {
   // After sing up succed ...
 
   const subscriber = observers.buildSubject({
-		...userTagsHub.getTagsForSubject("SignUp"),
-	});
+    ...userTagsHub.getTagsForSubject("SignUp"),
+  });
 
   // Pass the required data through the notifyObserver
   subscriber.notifyObservers(user);
@@ -29,22 +29,22 @@ The `notifyObservers` will call and send the required data to all the observers 
 Import the `createObserver` method and insert your logic into the callback
 
 ```tsx
-const sendUserWelcomeEmailObserver = createObserver((user: User)=>{
-		//your logic here
-})
+const sendUserWelcomeEmailObserver = createObserver((user: User) => {
+  //your logic here
+});
 
-const notifySalesNewUserSignUpObserver = createObserver((user: User)=>{
-		//your logic here
-})
+const notifySalesNewUserSignUpObserver = createObserver((user: User) => {
+  //your logic here
+});
 
-const addProductHistorialObserver = createObserver((product: Product)=>{
-		//your logic here
-})
+const addProductHistorialObserver = createObserver((product: Product) => {
+  //your logic here
+});
 ```
 
 ### 2. Add your observers to a Subject
 
-Import the `addObservers` method. 
+Import the `addObservers` method.
 
 It will link your observers to a specific Subject. Just write a name and a subject that they will observe 👀
 
@@ -53,19 +53,14 @@ const myObservers = addObservers([
   {
     name: "User",
     subject: "SignUp",
-    observers: [
-				sendWelcomeEmailObserver, 
-				notifySalesNewUserSignUpObserver,
-		],
+    observers: [sendWelcomeEmailObserver, notifySalesNewUserSignUpObserver],
   },
-	{
+  {
     name: "Product",
     subject: "Buy",
-    observers: [
-				addProductHistorialObserver,
-		],
+    observers: [addProductHistorialObserver],
   },
-])
+]);
 ```
 
 In case that you need more granularity you can use multiple `addObservers` methods
@@ -75,35 +70,27 @@ const sendUserEmailObservers = addObservers([
   {
     name: "User",
     subject: "SignUp",
-    observers: [
-				sendWelcomeEmailObserver, 
-		],
+    observers: [sendWelcomeEmailObserver],
   },
-	{
+  {
     name: "Product",
     subject: "CreateDiscount",
-    observers: [
-						sendEmailToUsersWithDiscountObserver,
-		],
+    observers: [sendEmailToUsersWithDiscountObserver],
   },
-])
+]);
 
 const notifySalesDptObservers = addObservers([
   {
     name: "User",
     subject: "SignUp",
-    observers: [
-				notifySalesNewUserSignUpObserver,
-		],
+    observers: [notifySalesNewUserSignUpObserver],
   },
-	{
+  {
     name: "Product",
     subject: "Issue",
-    observers: [
-				notifySalesWithProductIssueObserver,
-		],
+    observers: [notifySalesWithProductIssueObserver],
   },
-])
+]);
 ```
 
 ## 3. Load your observers
@@ -121,7 +108,7 @@ Now just export your loaded observers to start notifying them.
 
 ## 4. Build a Subject and Notify Observers
 
- Just write your code and notify the observers whenever you want.
+Just write your code and notify the observers whenever you want.
 
 ```tsx
 const signUpUser = (user: User) => {
@@ -144,7 +131,7 @@ The `notifyObservers` will call to all the observers linked to the subject and w
 
 # ⚠️ Advise
 
-Using pure strings into the `name` and `subject`  arguments for the methods `buildSubjet` and `addObservers` may cause typo bugs.
+Using pure strings into the `name` and `subject` arguments for the methods `buildSubjet` and `addObservers` may cause typo bugs.
 
 We recommend to use the `ObserverTagHub` class instead.
 
@@ -178,8 +165,8 @@ const signUpUser = (user: User) => {
   // After singup success ...
 
   const subscriber = observers.buildSubject({
-		...userTagsHub.getTagsForSubject("SignUp"),
-	});
+    ...userTagsHub.getTagsForSubject("SignUp"),
+  });
 
   // Pass your User object through the notifyObserver
   subscriber.notifyObservers(user);
