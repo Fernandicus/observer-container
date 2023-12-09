@@ -1,7 +1,7 @@
 {
   "name": "observer-container",
   "private": false,
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "",
   "type": "module",
   "main": "dist/observer-containe.cjs",
@@ -22,7 +22,12 @@
     "build": "tsup lib/index.ts --format cjs,esm --dts",
     "ci": "npm run lint && npm run test && npm run build"
   },
-  "keywords": [],
+  "keywords": [
+    "observer",
+    "observer pattern",
+    "pub/sub pattern",
+    "subject"
+  ],
   "author": "Fernandicus",
   "license": "MIT",
   "devDependencies": {
