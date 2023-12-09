@@ -10,7 +10,7 @@
 const signUpUser = (user: User) => {
   // Your code here ...
 
-  // Notify the all the observers and send the required data
+  // Notify the observers and send the required data
   const userTags = userTagsHub.get("SignUp");
   buildSubject(userTags).notifyObservers(user);
 };
