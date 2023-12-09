@@ -1,6 +1,6 @@
 # 👁️ The Observer Pattern in a Clean, Organized and Flexible way
 
-Sort your observersCentralize all the Observers in one single Subject
+> One Subject to control them all 👁️
 
 ### Overview
 
@@ -10,7 +10,7 @@ Sort your observersCentralize all the Observers in one single Subject
 const signUpUser = (user: User) => {
   // Your code here ...
 
-  // Notify the all the observers and send the required data
+  // Notify the observers and send the required data
   const userTags = userTagsHub.get("SignUp");
   buildSubject(userTags).notifyObservers(user);
 };
@@ -18,7 +18,7 @@ const signUpUser = (user: User) => {
 
 ## 🏋️ Motivation
 
-This library intends to keep the related observers well organized in the same place.
+This library is intended to keep related observers well organized in the same place.
 
 The approach is that instead of having multiple Subject instances for the different use cases, to have one subject that imports all the related Observers.
 
