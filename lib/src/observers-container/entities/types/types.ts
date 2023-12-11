@@ -34,6 +34,36 @@ export namespace Prop {
   export type SubjectBuilderHelper = ObserverTags & {
     observersLoader: ObserverLoader;
   };
+
+  export type ExtractObserverTag<T> = {
+    [Key in keyof T]: T[Key] extends infer Infer
+      ? Infer extends string
+        ? Infer
+        : Infer extends string[]
+        ? Infer[number]
+        : never
+      : never;
+  };
+
+  export type ExtractObserverTagsArray<T> = T extends Array<object>
+    ? T extends [...args: infer Infer]
+      ? Infer[number] extends infer InnerInfer
+        ? InnerInfer extends object
+          ? ExtractObserverTag<InnerInfer>
+          : InnerInfer extends string[]
+          ? InnerInfer[number]
+          : never
+        : never
+      : never
+    : never;
+
+  export type SetObserverTags<
+    TName extends string,
+    TSubjects extends string
+  > = {
+    name: TName;
+    subject: TSubjects[];
+  };
 }
 
 export namespace Return {
