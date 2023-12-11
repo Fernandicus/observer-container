@@ -1,4 +1,4 @@
-import { observers } from "../__mocks__/observers-container/loaded-observers";
+import { buildSubject } from "../__mocks__/observers-container/loaded-observers";
 import { fakeUser } from "../__mocks__/use-case/fake-user";
 import { signUpUser, userRepo } from "../__mocks__/use-case/signup-user";
 import { mockNotifySalesDepartment } from "../__mocks__/observers-container/observers/notify-sales-observers";
@@ -6,7 +6,6 @@ import { mockSendEmails } from "../__mocks__/observers-container/observers/send-
 import { ObserverContainer } from "../lib/src/observers-container/entities/ObserverContainer";
 import { SubjectsMap } from "../lib/src/observers-container/entities/SubjectsMap";
 import { ObserversMap } from "../lib/src/observers-container/entities/ObserversMap";
-import { userTagsHub } from "../__mocks__/observers-container/observers/tags-hub";
 
 describe("On Observer", () => {
   beforeEach(() => {
@@ -98,12 +97,12 @@ describe("On Observer", () => {
     expect(notif).toBeCalled();
   });
 
-  it("NOT Add Observer after adding subject", () => {
+  it("Add Observer after adding subject", () => {
     const subjectsMap = new SubjectsMap();
     const observersMap = new ObserversMap();
     const container = new ObserverContainer({ subjectsMap, observersMap });
 
-    const notif = jest.fn();
+    const notify = jest.fn();
     const observerTag = {
       name: "User",
       subject: "Save",
@@ -113,20 +112,21 @@ describe("On Observer", () => {
 
     container.addObserver({
       ...observerTag,
-      observer: { update: notif },
+      observer: { update: notify },
     });
 
     const subject = container.buildSubject(observerTag);
 
     subject.notifyObservers({});
 
-    expect(notif).toBeCalled();
+    expect(notify).toBeCalled();
   });
 
   it(`Notify Observers`, async () => {
     await signUpUser({
-      subject: observers.buildSubject({
-        ...userTagsHub.getTagsForSubject("SignUp"),
+      subject: buildSubject({
+        name: "User",
+        subject: "SignUp",
       }),
       userRepo: userRepo,
     });

@@ -1,5 +1,5 @@
-import { addObservers, createObserver } from "../../../lib/src";
-import { productTagsHub, userTagsHub } from "./tags-hub";
+import { createObserver } from "../../../lib/src";
+import { addObservers } from "../observer-tags";
 
 export const mockSendEmails = {
   onSignUpUser: jest.fn(),
@@ -11,11 +11,13 @@ export const mockUserContactSales = jest.fn();
 
 export const sendEmailsObservers = addObservers([
   {
-    ...userTagsHub.getTagsForSubject("SignUp"),
+    name: "User",
+    subject: "SignUp",
     observers: [createObserver(mockSendEmails.onSignUpUser)],
   },
   {
-    ...productTagsHub.getTagsForSubject("Buy"),
+    name: "Product",
+    subject: "Buy",
     observers: [createObserver(mockSendEmails.onBuyProduct)],
   },
 ]);

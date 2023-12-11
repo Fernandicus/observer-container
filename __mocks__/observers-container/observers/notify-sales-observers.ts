@@ -1,19 +1,20 @@
-import { addObservers, createObserver } from "../../../lib/src";
-import { userTagsHub } from "./tags-hub";
-
+import { createObserver } from "../../../lib/src";
+import { addObservers } from "../observer-tags";
 
 export const mockNotifySalesDepartment = {
   onSignUpUser: jest.fn(),
   onUserContactSales: jest.fn(),
-}
+};
 
 export const notifySalesDepartmentObservers = addObservers([
   {
-    ...userTagsHub.getTagsForSubject("SignUp"),
-    observers: [createObserver(mockNotifySalesDepartment.onSignUpUser)]
+    name: "User",
+    subject: "SignUp",
+    observers: [createObserver(mockNotifySalesDepartment.onSignUpUser)],
   },
   {
-    ...userTagsHub.getTagsForSubject("ContactSales"),
-    observers: [createObserver(mockNotifySalesDepartment.onUserContactSales)]
+    name: "User",
+    subject: "ContactSales",
+    observers: [createObserver(mockNotifySalesDepartment.onUserContactSales)],
   },
 ]);
