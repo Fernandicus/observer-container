@@ -1,10 +1,5 @@
 import { buildSubject, observerCreator } from "./observers-container";
-import { BuildSubject } from "./observers-container/application/BuildSubject";
 import { Prop } from "./observers-container/entities/types/types";
-
-type ReturnObservers = {
-  buildSubject: ReturnType<BuildSubject["withObserversLoaders"]>;
-};
 
 function loadObservers<
   TName extends string,
