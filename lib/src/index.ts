@@ -27,11 +27,8 @@ export function setObserverTags<
   TObserverTag extends Prop.SetObserverTags<TName, TSubjects>
 >(observerTags: TObserverTag[]) {
   return {
-    loadObservers: loadObservers<
-      TName,
-      TSubjects,
-      Prop.ExtractObserverTag<TObserverTag>
-    >,
+    loadObservers: (props: AddObserverProps<typeof observerTags>[]) =>
+      loadObservers(props),
     addObservers: (props: AddObserverProps<typeof observerTags>[]) => props,
   };
 }
